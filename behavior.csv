@@ -1,0 +1,10 @@
+user_id,product_id,action
+1,101,view
+1,101,cart
+1,102,view
+1,103,buy
+2,101,view
+2,104,buy
+3,103,view
+3,103,buy
+3,105,cart
