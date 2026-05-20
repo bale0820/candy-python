@@ -1,7 +1,8 @@
+import os
 from sqlalchemy import create_engine
 
-DATABASE_URL = (
-    "mysql+pymysql://root:mysql1234@localhost:3306/candy"
+DATABASE_URL = os.getenv(
+    "DATABASE_URL"
 )
 
 engine = create_engine(

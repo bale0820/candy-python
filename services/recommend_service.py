@@ -12,6 +12,12 @@ from models.als_models import (
 from database.db import engine
 
 
+from database.redis_cache import (
+    save_recommend_result,
+    get_recommend_result
+)
+
+
 
 def collaborative_filtering_service(
         user_id: int
@@ -113,6 +119,19 @@ def als_recommend_service(
         user_id: int
 ):
 
+    cached = get_recommend_result(
+        user_id
+    )
+
+    if cached is not None:
+
+        return {
+            "user_id": user_id,
+            "recommended_products":
+                cached
+        }
+
+
     query = """
     SELECT
         upk,
@@ -185,6 +204,11 @@ def als_recommend_service(
         product_ids.append(
             int(product_id)
         )
+
+    save_recommend_result(
+        user_id,
+        product_ids
+    )
 
     return {
         "user_id": user_id,
