@@ -31,7 +31,7 @@ app.include_router(recommend_router)
 def home():
 
     return {
-        "message" : "hello candy ai!"
+        "message" : "hello candy ai!!"
     }
 
 @app.get("/health")
