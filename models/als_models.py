@@ -1,4 +1,5 @@
 import implicit
+import joblib
 
 from scipy.sparse import (
     csr_matrix
@@ -45,6 +46,15 @@ def create_als_model(
     cached_sparse_matrix = sparse_matrix
     cached_user_item_matrix = user_item_matrix
 
+    joblib.dump(
+    {
+        "model": model,
+        "sparse_matrix": sparse_matrix,
+        "user_item_matrix": user_item_matrix
+    },
+    "als_data.pkl"
+    )
+
 def get_cached_model():
 
     return (
@@ -52,3 +62,37 @@ def get_cached_model():
         cached_sparse_matrix,
         cached_user_item_matrix
     )
+
+
+def load_als_model():
+
+    global cached_model
+    global cached_sparse_matrix
+    global cached_user_item_matrix
+
+    try:
+
+        data = joblib.load(
+            "als_data.pkl"
+        )
+
+        cached_model = data["model"]
+
+        cached_sparse_matrix = (
+            data["sparse_matrix"]
+        )
+
+        cached_user_item_matrix = (
+            data["user_item_matrix"]
+        )
+
+        print("ALS 모델 로드 완료")
+
+        return True
+
+    except Exception as e:
+
+        print("모델 로드 실패")
+        print(e)
+
+        return False

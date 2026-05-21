@@ -1,0 +1,41 @@
+name: candy-python Deploy
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+  
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v1.0.3
+
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+
+          script: |
+           cd /home/ubuntu/candy/python/candy-python
+           ./deploy-python.sh
+
+           # git fetch origin
+
+           # git reset --hard origin/main
+
+           # npm ci
+
+           # rm -rf dist
+
+           # npm run build
+
+           # pm2 reload candy || pm2 start dist/app.js --name candy
+
+           # pm2 save

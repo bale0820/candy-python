@@ -9,13 +9,14 @@ import pandas as pd
 from database.db import engine
 
 from models.als_models import (
-    create_als_model
+    create_als_model, load_als_model
 )
 
 
 from apscheduler.schedulers.background import (
     BackgroundScheduler
 )
+
 
 
 
@@ -33,21 +34,27 @@ def home():
         "message" : "hello candy ai"
     }
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 
 
 @app.on_event("startup")
 def startup_event():
 
-    # 최초 학습
-    retrain_als_model()
+    # 저장 모델 로드 시도
+    loaded = load_als_model()
 
-    # 스케줄러 생성
+    # 저장 모델 없을 때만 최초 학습
+    if not loaded:
+
+        retrain_als_model()
+
     scheduler = (
         BackgroundScheduler()
     )
 
-    # 매일 새벽 3시 재학습
     scheduler.add_job(
         retrain_als_model,
         "cron",
@@ -58,7 +65,6 @@ def startup_event():
     scheduler.start()
 
     print("스케줄러 시작")
-
 
 
 
