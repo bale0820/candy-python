@@ -1,4 +1,4 @@
-name: candy-python Deploy
+name: candy_python Deploy
 
 concurrency:
   group: deploy-production
